@@ -24,7 +24,7 @@
         {% for c in clients %}
         <tr class="hover:bg-red-50/50">
           <td class="px-4 py-3 font-medium">{{ c.name }}</td>
-          <td class="px-4 py-3 text-gray-700">{{ c.items }}</td>
+          <td class="px-4 py-3 text-gray-700">{{ c.get('items') }}</td>
           <td class="px-4 py-3 text-right font-mono">{{ "%.2f"|format(c.amount) }}</td>
           <td class="px-4 py-3 text-gray-500">{{ c.date_updated.split('T')[0] if 'T' in c.date_updated else c.date_updated }}</td>
           <td class="px-4 py-3 text-right space-x-2 whitespace-nowrap">

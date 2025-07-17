@@ -10,5 +10,11 @@ app.register_blueprint(main)
 def not_found(e):
     render_template("404.html")
 
+# avoide error logs 
+@app.route('/favicon.ico')
+def favicon():
+    return '', 204
+
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)

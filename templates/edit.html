@@ -15,7 +15,7 @@
     <label for="items" class="block text-sm font-medium mb-1">Items Taken</label>
     <textarea id="items" name="items" rows="3"
               class="w-full rounded border-gray-300 focus:border-pink-500 focus:ring-pink-500"
-              placeholder="e.g., 3 croissants, 2 éclairs">{{ client.items }}</textarea>
+              placeholder="e.g., 3 croissants, 2 éclairs">{{ client.get(items) }}</textarea>
   </div>
 
   <div>
