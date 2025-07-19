@@ -4,54 +4,54 @@
 
 <div class="flex items-center justify-between mb-4">
   <h2 class="text-xl font-semibold">Trash</h2>
-  <a href="{{ url_for('main.index') }}"
-     class="text-sm text-gray-600 hover:underline">← Back to Clients</a>
+  <a href="{{ url_for('main.index') }}" class="text-sm text-gray-600 hover:underline">← Back to Clients</a>
 </div>
 
 {% if clients %}
-  <div class="overflow-x-auto bg-white shadow rounded">
-    <table class="min-w-full text-sm">
-      <thead class="bg-gray-50 text-gray-600 uppercase text-xs tracking-wider">
-        <tr>
-          <th class="px-4 py-3 text-left">Name</th>
-          <th class="px-4 py-3 text-left">Items</th>
-          <th class="px-4 py-3 text-right">Amount</th>
-          <th class="px-4 py-3 text-left">Deleted?</th>
-          <th class="px-4 py-3 text-right">Actions</th>
-        </tr>
-      </thead>
-      <tbody class="divide-y divide-gray-100">
-        {% for c in clients %}
-        <tr class="hover:bg-red-50/50">
-          <td class="px-4 py-3 font-medium">{{ c.name }}</td>
-          <td class="px-4 py-3 text-gray-700">{{ c.get('items') }}</td>
-          <td class="px-4 py-3 text-right font-mono">{{ "%.2f"|format(c.amount) }}</td>
-          <td class="px-4 py-3 text-gray-500">{{ c.date_updated.split('T')[0] if 'T' in c.date_updated else c.date_updated }}</td>
-          <td class="px-4 py-3 text-right space-x-2 whitespace-nowrap">
-            <!-- Restore -->
-            <form action="{{ url_for('main.restore', id=c.id) }}" method="post" class="inline">
-              <button type="submit" class="text-green-600 hover:underline"
-                      onclick="return confirm('Restore {{ c.name }}?');">
-                Restore
-              </button>
-            </form>
-            <!-- Hard delete -->
-            <form action="{{ url_for('main.delete', id=c.id) }}" method="post" class="inline">
-              <button type="submit" class="text-red-600 hover:underline"
-                      onclick="return confirm('Permanently delete {{ c.name }}? This cannot be undone.');">
-                Delete
-              </button>
-            </form>
-          </td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-  </div>
+<div class="overflow-x-auto bg-white shadow rounded">
+  <table class="min-w-full text-sm">
+    <thead class="bg-gray-50 text-gray-600 uppercase text-xs tracking-wider">
+      <tr>
+        <th class="px-4 py-3 text-left">Name</th>
+        <th class="px-4 py-3 text-left">Items</th>
+        <th class="px-4 py-3 text-right">Amount</th>
+        <th class="px-4 py-3 text-left">Deleted?</th>
+        <th class="px-4 py-3 text-right">Actions</th>
+      </tr>
+    </thead>
+    <tbody class="divide-y divide-gray-100">
+      {% for c in clients %}
+      <tr class="hover:bg-red-50/50">
+        <td class="px-4 py-3 font-medium">{{ c.name }}</td>
+        <td class="px-4 py-3 text-gray-700">{{ c.get('items') }}</td>
+        <td class="px-4 py-3 text-right font-mono">{{ "%.2f"|format(c.amount) }}</td>
+        <td class="px-4 py-3 text-gray-500">{{ c.date_updated.replace('T', ' ')[:16] if 'T' in c.date_updated else
+          c.date_updated[:16] }}</td>
+        <td class="px-4 py-3 text-right space-x-2 whitespace-nowrap">
+          <!-- Restore -->
+          <form action="{{ url_for('main.restore', id=c.id) }}" method="post" class="inline">
+            <button type="submit" class="text-green-600 hover:underline"
+              onclick="return confirm('Restore {{ c.name }}?');">
+              Restore
+            </button>
+          </form>
+          <!-- Hard delete -->
+          <form action="{{ url_for('main.delete', id=c.id) }}" method="post" class="inline">
+            <button type="submit" class="text-red-600 hover:underline"
+              onclick="return confirm('Permanently delete {{ c.name }}? This cannot be undone.');">
+              Delete
+            </button>
+          </form>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
 {% else %}
-  <div class="p-8 bg-white shadow rounded text-center text-gray-500">
-    Trash is empty.
-  </div>
+<div class="p-8 bg-white shadow rounded text-center text-gray-500">
+  Trash is empty.
+</div>
 {% endif %}
 
 {% endblock %}

@@ -28,28 +28,37 @@ def get_next_id(clients):
 def index():
     clients = [c for c in load_clients() if not c['is_trashed']]
     return render_template('index.html', clients=clients)
-# avoide error logs 
-@main.route('/favicon.ico')
-def favicon():
-    return '', 204
+
 
 @main.route('/trash')
 def trash():
     clients = [c for c in load_clients() if c['is_trashed']]
     return render_template('trash.html', clients=clients)
 
+@main.route('/mark_paid/<int:id>', methods=['POST'])
+def mark_paid(id):
+    clients = load_clients()
+    client = next((c for c in clients if c['id'] == id), None)
+    if not client:
+        return "Client not found", 404
+    client['status'] = 'paid'
+    client['date_updated'] = datetime.now().strftime('%Y-%m-%dT%H:%M')
+    save_clients(clients)
+    return redirect(url_for('main.index'))
+
 @main.route('/add', methods=['GET', 'POST'])
 def add():
     if request.method == 'POST':
         clients= load_clients()
+        now_str = datetime.now().strftime('%Y-%m-%dT%H:%M')
         new_client = {
             "id": get_next_id(clients),
             "name": request.form['name'],
             "items": request.form['items'],
             "amount": float(request.form['amount']),
             "status": request.form['status'],
-            "date_added": datetime.now().isoformat(),
-            "date_updated": datetime.now().isoformat(),
+            "date_added": now_str,
+            "date_updated": now_str,
             "is_trashed": False
         }
         clients.append(new_client)
@@ -69,7 +78,7 @@ def edit(id):
         client['items'] = request.form['items']
         client['amount'] = float(request.form['amount'])
         client['status'] = request.form['status']
-        client['date_updated'] = datetime.now().isoformat()
+        client['date_updated'] = datetime.now().strftime('%Y-%m-%dT%H:%M')
         save_clients(clients)
         return redirect(url_for('main.index'))
 
@@ -85,7 +94,7 @@ def soft_delete(id):
     save_clients(clients)
     return redirect(url_for('main.index'))
 
-@main.route('/restore/<int:id>')
+@main.route('/restore/<int:id>', methods=['GET', 'POST'])
 def restore(id):
     clients = load_clients()
     for c in clients:
